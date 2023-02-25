@@ -181,8 +181,12 @@ def unpack(subset, orig_lsb_data):
         return (new_subset_nodes, None)
 
 
-if sys.argv[1] not in ("pack", "unpack", "dry_pack", "dry_unpack"):
-    print(f"Syntax: {sys.argv[0]} {pack|unpack|dry_pack|dry_unpack} datei1 ... dateiN")
+if (len(sys.argv) <= 2) or (
+    sys.argv[1] not in ("pack", "unpack", "dry_pack", "dry_unpack")
+):
+    print(
+        f"Syntax: {sys.argv[0]} {{pack|unpack|dry_pack|dry_unpack}} datei1.ls3 ... dateiN.ls3"
+    )
     sys.exit(1)
 
 for ls3_filename in sys.argv[2:]:
@@ -198,11 +202,12 @@ for ls3_filename in sys.argv[2:]:
 
     lsb_filename = os.path.splitext(ls3_filename)[0] + ".lsb"
     try:
-        lsb_data = open(lsb_filename, "rb").read()
+        with open(lsb_filename, "rb") as f:
+            lsb_data = f.read()
         print(f".lsb-Datei: {lsb_filename}")
     except FileNotFoundError:
         lsb_data = None
-        print(f"Keine .lsb-Datei")
+        print("Keine .lsb-Datei")
 
     for subset_node in subset_nodes:
         if lsb_data is not None:
@@ -251,7 +256,7 @@ for ls3_filename in sys.argv[2:]:
             for subset_node in new_subset_nodes
         )
     if len(subset_nodes) == len(new_subset_nodes):
-        print(f"Keine Änderungen")
+        print("Keine Änderungen")
     else:
         print(f"{len(subset_nodes)} -> {len(new_subset_nodes)} Subsets")
 
