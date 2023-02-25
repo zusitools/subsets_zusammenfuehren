@@ -68,9 +68,9 @@ def pack(subsets, orig_lsb_data):
             if orig_lsb_data is not None
             else len(subset.verts)
         )
-        if vert_idx_offset + num_vertices >= 32768:
+        if vert_idx_offset + num_vertices >= 65536:
             flush()
-        assert vert_idx_offset + num_vertices < 32768
+        assert vert_idx_offset + num_vertices < 65536
         new_vertex_data += (
             orig_lsb_data[subset.verts] if orig_lsb_data is not None else subset.verts
         )
